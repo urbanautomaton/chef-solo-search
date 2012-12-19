@@ -32,7 +32,7 @@ def search(*args, &block)
   # wrapper around creating a new Recipe instance and calling search on it
   node = Chef::Node.new()
   cookbooks = Chef::CookbookCollection.new()
-  run_context = Chef::RunContext.new(node, cookbooks)
+  run_context = Chef::RunContext.new(node, cookbooks, nil)
   return Chef::Recipe.new("test_cookbook", "test_recipe", run_context).search(*args, &block)
 end
 
