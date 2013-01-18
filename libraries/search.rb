@@ -129,8 +129,8 @@ if Chef::Config[:solo]
       class Query
         def initialize(*args)
         end
-        def search(*args)
-          QuerySearchHelper.search(*args)
+        def search(*args, &block)
+          QuerySearchHelper.search(*args, &block)
         end
       end
     end
