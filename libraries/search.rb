@@ -27,6 +27,14 @@ if Chef::Config[:solo]
   # that ships with this cookbook
   $: << File.expand_path("vendor", File.dirname(__FILE__)) if Chef::VERSION.to_i >= 11
 
+  # Ensure the treetop gem is installed and available
+  begin
+    require 'treetop'
+  rescue LoadError
+    run_context = Chef::RunContext.new(Chef::Node.new, {}, Chef::EventDispatch::Dispatcher.new)
+    Chef::Resource::ChefGem.new("treetop", run_context).run_action(:install)
+  end
+
   require 'parser'
 
   class Chef
