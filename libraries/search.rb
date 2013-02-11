@@ -3,6 +3,7 @@
 #
 # Authors:
 #       Markus Korn <markus.korn@edelight.de>
+#       Seth Chisamore <schisamo@opscode.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,21 +20,14 @@
 
 if Chef::Config[:solo]
 
-  if (defined? require_relative).nil?
-    # definition of 'require_relative' for ruby < 1.9, found on stackoverflow.com
-    def require_relative(relative_feature)
-      c = caller.first
-      fail "Can't parse #{c}" unless c.rindex(/:\d+(:in `.*')?$/)
-      file = $`
-      if /\A\((.*)\)/ =~ file # eval, etc.
-        raise LoadError, "require_relative is called in #{$1}"
-      end
-      absolute = File.expand_path(relative_feature, File.dirname(file))
-      require absolute
-    end
-  end
+  # add currrent dir to load path
+  $: << File.dirname(__FILE__)
 
-  require_relative 'parser.rb'
+  # All chef/solr_query/* classes were removed in Chef 11; Load vendored copy
+  # that ships with this cookbook
+  $: << File.expand_path("vendor", File.dirname(__FILE__)) if Chef::VERSION.to_i >= 11
+
+  require 'parser'
 
   class Chef
     module Mixin
