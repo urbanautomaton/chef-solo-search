@@ -192,7 +192,9 @@ end
 module SearchNodeTests
   def test_list_nodes
     nodes = search(:node)
-    assert_equal Chef::Node, nodes.first.class
+    assert_equal Chef::Node, nodes.find{ |n| n["hostname"] == "alpha.example.com" }.class
+    assert_equal Chef::Node, nodes.find{ |n| n["hostname"] == "beta.example.com" }.class
+    assert_equal Hash, nodes.find{ |n| n["hostname"] == "wjc.example.com" }.class
     assert_equal 3, nodes.length
   end
 
