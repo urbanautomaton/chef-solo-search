@@ -33,7 +33,7 @@ if Chef::Config[:solo]
   rescue LoadError
     run_context = Chef::RunContext.new(Chef::Node.new, {}, Chef::EventDispatch::Dispatcher.new)
     chef_gem = Chef::Resource::ChefGem.new("treetop", run_context)
-    chef_gem.version('1.4.10')
+    chef_gem.version('>= 1.4')
     chef_gem.run_action(:install)
   end
 
