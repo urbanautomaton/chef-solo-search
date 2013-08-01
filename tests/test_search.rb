@@ -220,10 +220,7 @@ module SearchNodeTests
   end
 end
 
-class TestImplicitSearchDB < Test::Unit::TestCase
-  include SearchDbTests
-  include SearchNodeTests
-
+module ImplicitSearchDB
   def search(*args, &block)
     # wrapper around creating a new Recipe instance and calling search on it
     node = Chef::Node.new()
@@ -233,21 +230,59 @@ class TestImplicitSearchDB < Test::Unit::TestCase
   end
 end
 
-class TestExplicitSearchDB < Test::Unit::TestCase
-  include SearchDbTests
-  include SearchNodeTests
-
+module ExplicitSearchDB
   def search(*args, &block)
     Chef::Search::Query.new.search(*args, &block)
   end
 end
 
-class TestEncryptedSearch < Test::Unit::TestCase
-  include SearchDbTests
-  Chef::Config[:encrypted_data_bag_secret] = "#{File.dirname(__FILE__)}/data/encrypted_data_bag_secret"
+module SearchWithEncryptionKey
+  def search(*args, &block)
+    ::Chef::Config[:encrypted_data_bag_secret] = "#{File.dirname(__FILE__)}/data/encrypted_data_bag_secret"
+    super *args, &block
+  end
+end
 
+module SearchOnEncryptedDataBag
+  include SearchWithEncryptionKey
   def search(*args, &block)
     args[0] = "encrypted_#{args[0]}".to_sym
-    Chef::Search::Query.new.search(*args, &block)
+    super *args, &block
   end
+end
+
+class TestImplicitSearchDB < Test::Unit::TestCase
+  include SearchNodeTests
+  include SearchDbTests
+  include ImplicitSearchDB
+end
+
+class TestExplicitSearchDB < Test::Unit::TestCase
+  include SearchNodeTests
+  include SearchDbTests
+  include ExplicitSearchDB
+end
+
+class TestImplicitSearchDbWithEncryptionKey < Test::Unit::TestCase
+  include SearchDbTests
+  include ImplicitSearchDB
+  include SearchWithEncryptionKey
+end
+
+class TestExplicitSearchDbWithEncryptionKey < Test::Unit::TestCase
+  include SearchDbTests
+  include ExplicitSearchDB
+  include SearchWithEncryptionKey
+end
+
+class TestImplicitSearchDbWithEncryptedDataBag < Test::Unit::TestCase
+  include SearchDbTests
+  include ImplicitSearchDB
+  include SearchOnEncryptedDataBag
+end
+
+class TestExplicitSearchDbWithEncryptedDataBag < Test::Unit::TestCase
+  include SearchDbTests
+  include ExplicitSearchDB
+  include SearchOnEncryptedDataBag
 end

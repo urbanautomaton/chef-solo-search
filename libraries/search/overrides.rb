@@ -18,6 +18,11 @@
 # limitations under the License.
 #
 
+unless defined?(Chef::EncryptedDataBagItem::UnacceptableEncryptedDataBagItemFormat)
+  class Chef::EncryptedDataBagItem::UnacceptableEncryptedDataBagItemFormat < StandardError
+  end
+end
+
 module Search
   module Overrides
     # Overwrite the search method of recipes to operate locally by using
@@ -90,13 +95,19 @@ module Search
       if Chef::Config[:encrypted_data_bag_secret]
         begin
           bag_item = Chef::EncryptedDataBagItem.load(bag_name, bag_item_id).to_hash
-        rescue Chef::EncryptedDataBagItem::DecryptionFailure
+        rescue Chef::EncryptedDataBagItem::DecryptionFailure,Chef::EncryptedDataBagItem::UnacceptableEncryptedDataBagItemFormat
           bag_item = nil
         rescue NoMethodError => e
-          bag_item = nil if e.message =~ /undefined method `unpack'/
+          raise e unless e.message =~ /undefined method `unpack' for/
+          bag_item = nil
         rescue ArgumentError => e
-          bag_item = nil if e.message =~ /data must not be empty/
+          raise e unless e.message =~ /data must not be empty/
+          bag_item = nil
+        rescue NameError => e
+          raise e unless e.message =~ /`format_version' for Chef::EncryptedDataBagItem::Decryptor:Module/
+          bag_item = nil
         end
+
       end
 
       bag_item ||= data_bag_item(bag_name.to_s, bag_item_id)
