@@ -86,16 +86,27 @@ module Search
       return _result
     end
 
+    def load_data_bag(bag_name, bag_item_id)
+      if Chef::Config[:encrypted_data_bag_secret]
+        begin
+          bag_item = Chef::EncryptedDataBagItem.load(bag_name, bag_item_id).to_hash
+        rescue Chef::EncryptedDataBagItem::DecryptionFailure
+          bag_item = nil
+        rescue NoMethodError => e
+          bag_item = nil if e.message =~ /undefined method `unpack'/
+        rescue ArgumentError => e
+          bag_item = nil if e.message =~ /data must not be empty/
+        end
+      end
+
+      bag_item ||= data_bag_item(bag_name.to_s, bag_item_id)
+    end
+
     def search_data_bag(_query, bag_name, start, rows, &block)
-      secret_path = Chef::Config[:encrypted_data_bag_secret]
-      secret  = Chef::Config[:encrypted_data_bag_secret] ? Chef::EncryptedDataBagItem.load_secret(secret_path) : nil
       _result = []
       data_bag(bag_name.to_s).each do |bag_item_id|
-        if secret
-          bag_item = Chef::EncryptedDataBagItem.load(bag_name, bag_item_id, secret)
-        else
-          bag_item = data_bag_item(bag_name.to_s, bag_item_id)
-        end
+        bag_item = load_data_bag(bag_name, bag_item_id)
+
         if _query.match(bag_item)
           _result << bag_item
         end

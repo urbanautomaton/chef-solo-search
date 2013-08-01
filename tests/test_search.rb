@@ -242,3 +242,12 @@ class TestExplicitSearchDB < Test::Unit::TestCase
   end
 end
 
+class TestEncryptedSearch < Test::Unit::TestCase
+  include SearchDbTests
+  Chef::Config[:encrypted_data_bag_secret] = "#{File.dirname(__FILE__)}/data/encrypted_data_bag_secret"
+
+  def search(*args, &block)
+    args[0] = "encrypted_#{args[0]}".to_sym
+    Chef::Search::Query.new.search(*args, &block)
+  end
+end
