@@ -30,12 +30,6 @@ class Chef
   end
 end
 
-class Chef::EncryptedDataBagItem
-   def keys
-     @enc_hash.keys
- end
-end
-
 def build_flat_hash(hsh, prefix="")
   result = {}
   hsh.each_pair do |key, value|
