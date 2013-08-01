@@ -30,6 +30,10 @@ The same for your roles, add
 
     role_path "<node_work_path>/roles"
 
+To support encrypted data bags, add
+
+    encrypted_data_bag_secret "path_to_data_bag_secret"
+
 ## Supported queries
 
 The search methods supports a basic sub-set of the lucene query language.
