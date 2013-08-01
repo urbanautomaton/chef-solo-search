@@ -18,6 +18,8 @@ management tool
 ([Librarian](https://github.com/applicationsonline/librarian-chef),
 [Berkshelf](https://github.com/RiotGames/berkshelf), knife...).
 
+In Chef 11, you must either add this to the run list of the nodes where it's used or include it as a dependency in the recipes that use it. [See changes in Chef 11.](http://docs.opscode.com/breaking_changes_chef_11.html#non-recipe-file-evaluation-includes-dependencies)
+
 Now you have to make sure chef-solo knows about data bags, therefore add
 
     data_bag_path "<node_work_path>/data_bags"
