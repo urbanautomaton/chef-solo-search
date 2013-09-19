@@ -2,6 +2,16 @@
 chef-solo-search Changelog
 ==========================
 
+Version 0.5.0, September 19, 2013
+---------------------------------
+* Allow node data bag path to be configured
+* updated install instructions with focus on Chef 11
+* Fixed Treetop dependency such that the omnibus installer is working
+* Added proper ruby Gemfile
+* use rake as runner for the tests
+* Fixed Travis CI builds
+
+
 Version 0.4.0, March 8, 2013
 ----------------------------
 * Added support for 'chef_environment:_default' to queries.
