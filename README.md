@@ -83,11 +83,11 @@ Sample supported queries are:
 
 ### NOT condition in queries:
 
-    search(:users, "children:tom NOT gender:female")
+    search(:users, "children:tom AND (NOT gender:female)")
 
 ### More complex queries:
 
-    search(:users, "children:tom NOT gender:female AND age:42")
+    search(:users, "children:tom AND (NOT gender:female) AND age:42")
 
 
 ## Supported Objects
