@@ -136,6 +136,17 @@ You can use the standard role objects in JSON form and put them into your role p
 }
 ```
 
+### Databags
+
+You can use the standard databag objects in JSON form.
+
+```javascript
+{
+  "id": "my-ssh",
+  "hostgroup_name": "all",
+  "command_line": "$USER1$/check_ssh $HOSTADDRESS$"
+}
+```
 
 ### Nodes
 
@@ -164,18 +175,6 @@ You can use the standard node objects in JSON form.
   "run_list": [
     "role[monitoring]"
   ]
-}
-```
-
-### Databags
-
-You can use the standard databag objects in JSON form.
-
-```javascript
-{
-  "id": "my-ssh",
-  "hostgroup_name": "all",
-  "command_line": "$USER1$/check_ssh $HOSTADDRESS$"
 }
 ```
 
