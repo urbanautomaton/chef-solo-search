@@ -106,6 +106,12 @@ You can use the standard role objects in json form and put them into your role p
           ],
       "chef_type": "role"
 
+You can also use ruby formatted roles and put them in your role path.
+The one proviso being that the filename must match the rolename
+
+    name "other"
+    description "AN Other Role"
+    run_list []
 
 ### Nodes
 Nodes are injected through a databag called 'node'.  Create a databag called 'node' and put your json files there
