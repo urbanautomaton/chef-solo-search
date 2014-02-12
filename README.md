@@ -140,6 +140,15 @@ You can use the standard role objects in JSON form and put them into your role p
 }
 ```
 
+You can also use ruby formatted roles and put them in your role path.
+The one proviso being that the filename must match the rolename
+
+```ruby
+name "other"
+description "AN Other Role"
+run_list []
+```
+
 ### Databags
 
 You can use the standard databag objects in JSON form.

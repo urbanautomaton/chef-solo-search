@@ -81,14 +81,23 @@ module Search
 
     def search_roles(_query, start, rows, &block)
       _result = []
-      Dir.glob(File.join(Chef::Config[:role_path], "*.json")).map do |f|
-        # parse and hashify the role
-        role = Chef::JSONCompat.from_json(IO.read(f))
-        if _query.match(role.to_hash)
-          _result << role
+      Dir.glob(File.join(Chef::Config[:role_path], "{*.json,*.rb}")).map do |f|
+        if f.end_with? '.json'
+          # parse and hashify the role
+          role = Chef::JSONCompat.from_json(IO.read(f))
+          if _query.match(role.to_hash)
+            _result << role
+          end
+        elsif f.end_with? '.rb'
+          # This assumes the filename matches the role name, there may be a better way
+          role = Chef::Role.from_disk(File.basename(f).split('.')[0..-2].join('.'))
+          if _query.match(role.to_hash)
+            _result << role
+          end
         end
+
       end
-      return _result
+      _result
     end
 
     def load_data_bag(bag_name, bag_item_id)
