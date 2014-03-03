@@ -37,6 +37,14 @@ if Chef::Config[:solo]
     chef_gem.run_action(:install)
   end
 
+  # Ensure encrypted_data_bag_secret is available (or not)
+  if Chef::Config[:encrypted_data_bag_secret] && 
+    !File.exist?(Chef::Config[:encrypted_data_bag_secret])
+
+    Chef::Log.warn "encrypted_data_bag_Secret is set but file does not exist. Unsetting"
+    Chef::Config[:encrypted_data_bag_secret] = nil
+  end
+
   require 'search/overrides'
   require 'search/parser'
 
