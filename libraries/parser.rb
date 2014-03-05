@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-require 'chef/solr_query/query_transform'
+require 'query_transform'
 
 # mock QueryTransform such that we can access the location of the lucene grammar
 class Chef
