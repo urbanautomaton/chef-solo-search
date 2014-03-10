@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 require 'treetop'
-require 'lucene_nodes'
+require 'chef/solr_query/lucene_nodes'
 
 class Chef
   class Exceptions

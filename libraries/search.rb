@@ -45,8 +45,8 @@ if Chef::Config[:solo]
     Chef::Config[:encrypted_data_bag_secret] = nil
   end
 
-  require 'overrides'
-  require 'parser'
+  require 'search/overrides'
+  require 'search/parser'
 
   module Search; class Helper; end; end
 
