@@ -29,11 +29,12 @@ if Chef::Config[:solo]
 
   # Ensure the treetop gem is installed and available
   begin
+    gem 'treetop', '=1.5.1'
     require 'treetop'
   rescue LoadError
     run_context = Chef::RunContext.new(Chef::Node.new, {}, Chef::EventDispatch::Dispatcher.new)
     chef_gem = Chef::Resource::ChefGem.new("treetop", run_context)
-    chef_gem.version('>= 1.4')
+    chef_gem.version('= 1.5.1')
     chef_gem.run_action(:install)
   end
 
