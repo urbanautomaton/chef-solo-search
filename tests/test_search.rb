@@ -195,13 +195,13 @@ module SearchNodeTests
     nodes = search(:node)
     assert_equal Chef::Node, nodes.find{ |n| n["hostname"] == "alpha.example.com" }.class
     assert_equal Chef::Node, nodes.find{ |n| n["hostname"] == "beta.example.com" }.class
-    assert_equal Hash, nodes.find{ |n| n["hostname"] == "wjc.example.com" }.class
+    assert_equal Chef::Node, nodes.find{ |n| n["hostname"] == "wjc.example.com" }.class
     assert_equal 3, nodes.length
   end
 
   def test_search_node_with_wide_filter
     nodes = search(:node, "role:test_server AND chef_environment:default")
-    assert_equal 2, nodes.length
+    assert_equal 3, nodes.length
   end
 
   def test_search_node_with_narrow_filter
@@ -217,6 +217,11 @@ module SearchNodeTests
   def test_search_node_without_json_class
     nodes = search(:node, "chef_environment:default")
     assert_equal 3, nodes.length
+  end
+
+  def test_search_role_without_json_class
+    nodes = search(:node, "role:ci")
+    assert_equal 1, nodes.length
   end
 end
 

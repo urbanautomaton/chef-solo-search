@@ -71,7 +71,12 @@ module Search
       node_path = Chef::Config[:nodes_path] || File.join(Chef::Config[:data_bag_path], "node")
       Dir.glob(File.join(node_path, "*.json")).map do |f|
         # parse and hashify the node
-        node = Chef::JSONCompat.from_json(IO.read(f))
+        json = Yajl::Parser.parse(IO.read(f))
+        node = if json.has_key?('json_class')
+                 Chef::JSONCompat.from_json(IO.read(f))
+               else
+                 Chef::Node.json_create(json)
+               end
         if _query.match(node.to_hash)
           _result << node
         end
